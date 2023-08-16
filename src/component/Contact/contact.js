@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "./contact.css";
 import WallMart from "../../assets/walmart.png";
 import Microsoft from "../../assets/microsoft.png";
@@ -8,6 +8,7 @@ import FacebookIcon from "../../assets/facebook-icon.png";
 import TwitterIcon from "../../assets/twitter.png";
 import YoutubeIcon from "../../assets/youtube.png";
 import InstagramIcon from "../../assets/instagram.png";
+import emailjs from "@emailjs/browser";
 
 const clientImg = [
   { id: 1, image: WallMart, label: "Wallmart" },
@@ -17,6 +18,29 @@ const clientImg = [
 ];
 
 const Contact = () => {
+  const form = useRef();
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    emailjs
+      .sendForm(
+        "service_omhig3d",
+        "template_npobwpc",
+        form.current,
+        "l-LSCGLrUwfmpUZuY"
+      )
+      .then(
+        (result) => {
+          console.log(result.text);
+          e.target.reset();
+          alert("email sent !");
+        },
+        (error) => {
+          console.log(error.text);
+        }
+      );
+  };
+
   return (
     <section id="contactPage">
       <div id="clients">
@@ -47,9 +71,19 @@ const Contact = () => {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores, a?
         </span>
 
-        <form className="contactForm">
-          <input type="text" className="name" placeholder="Your Name" />
-          <input type="email" className="email" placeholder="Your Email" />
+        <form onSubmit={sendEmail} ref={form} className="contactForm">
+          <input
+            type="text"
+            name="to_name"
+            className="name"
+            placeholder="Your Name"
+          />
+          <input
+            name="your_email"
+            type="email"
+            className="email"
+            placeholder="Your Email"
+          />
           <textarea
             className="msg"
             name="message"
